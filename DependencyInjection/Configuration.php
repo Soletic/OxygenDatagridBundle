@@ -19,6 +19,12 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('oxygen_datagrid');
+        
+        $rootNode
+        	->children()
+        		->scalarNode('grid_class')->defaultValue('Oxygen\DatagridBundle\Grid\Grid')->end()
+        		->scalarNode('twig_class')->defaultValue('Oxygen\DatagridBundle\Templating\GridTwigExtension')->end()
+        	->end();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
