@@ -5,18 +5,17 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="oxygen_datagrid.templating.class">Oxygen\DatagridBundle\Templating\GridTemplating</parameter>
-        <parameter key="oxygen_datagrid.default_configurator.class">Oxygen\DatagridBundle\Grid\Configuration\GridConfigurator</parameter>
-        <parameter key="oxygen_datagrid.default_configurator.configuration">Oxygen\DatagridBundle\Grid\Configuration\GridMinimalConfiguration</parameter>
+        <parameter key="oxygen_datagrid.loader.class">Oxygen\DatagridBundle\Grid\GridLoader</parameter>
+        <parameter key="oxygen_datagrid.default_configurator.class">Oxygen\DatagridBundle\Grid\Configuration\Configurator</parameter>
     </parameters>
 
     <services>
     	<service id="oxygen_datagrid.default_configurator" class="%oxygen_datagrid.default_configurator.class%">
-    		<argument>%oxygen_datagrid.default_configurator.configuration%</argument>
         </service>
-        <service id="oxygen_datagrid.templating" class="%oxygen_datagrid.templating.class%" scope="prototype">
+        <service id="oxygen_datagrid.loader" class="%oxygen_datagrid.loader.class%" scope="prototype">
             <argument type="service" id="grid" />
             <argument type="service" id="oxygen_framework.entities" />
+            <argument type="service" id="oxygen_datagrid.configuration.pool" />
             <argument type="service" id="oxygen_datagrid.default_configurator" />
         </service>
     </services>

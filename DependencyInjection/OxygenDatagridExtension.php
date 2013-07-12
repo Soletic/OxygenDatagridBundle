@@ -26,6 +26,8 @@ class OxygenDatagridExtension extends OxygenExtension
         $this->mapsParameter($container, 'oxygen_datagrid', $config);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services/templating.xml');
+        $loader->load('services/configuration.xml');
+        $loader->load('services/grid.xml');
+        
     }
 }

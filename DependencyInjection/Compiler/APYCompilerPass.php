@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  * @author lolozere
  *
  */
-class APYCompiler implements CompilerPassInterface
+class APYCompilerPass implements CompilerPassInterface
 {
 	public function process(ContainerBuilder $container)
 	{
