@@ -1,7 +1,10 @@
 <?php
 namespace Oxygen\DatagridBundle\Grid\Configuration;
 
-use Oxygen\DatagridBundle\Grid\Configuration\GridConfigurationInterface;
+use Oxygen\DatagridBundle\Grid\Action\Edit;
+use Oxygen\DatagridBundle\Grid\Action\Delete;
+
+use Oxygen\DatagridBundle\Grid\Configuration\ConfigurationInterface;
 
 /**
  * Base class to configure a Grid
@@ -12,6 +15,7 @@ use Oxygen\DatagridBundle\Grid\Configuration\GridConfigurationInterface;
 abstract class Configuration implements ConfigurationInterface {
 	
 	protected $configuration = array();
+	protected $actions = array();
 	protected $gridId;
 	protected $sourceType;
 	protected $sourceReference;
@@ -21,9 +25,34 @@ abstract class Configuration implements ConfigurationInterface {
 		$this->sourceReference = $sourceReference;
 		$this->gridId = $gridId;
 	}
+	/**
+	 * Add action type foreach row
+	 * 
+	 * @param string $route
+	 * @param string $parameterNameId Name of the parameter representing the identifier
+	 * @param string $type edit or delete
+	 * @throws \Exception Action type unknown
+	 */
+	public function addActionType($route, $type) {
+		switch($type) {
+			case 'edit':
+				$action = new Edit('Modifier', $route);
+				break;
+			case 'delete':
+				$action = new Delete('Supprimer', $route);
+				break;
+			default:
+				throw new \Exception(sprintf("Action type %s unknown", $type));
+		}
+		$this->actions[] = $action;
+	}
+	
+	public function getActions() {
+		return $this->actions;
+	}
 	
 	public function getGridId() {
-		return $this->getGridId;
+		return $this->gridId;
 	}
 	
 	/**

@@ -1,6 +1,8 @@
 <?php
 namespace Oxygen\DatagridBundle\Grid;
 
+use Oxygen\DatagridBundle\Grid\Configuration\ConfigurationInterface;
+
 use Oxygen\DatagridBundle\Grid\Configuration\ConfigurationPool;
 
 use Oxygen\DatagridBundle\Grid\Configuration\Configurator;
@@ -49,25 +51,30 @@ class GridLoader {
 			
 			switch($configuration->getSourceType()) {
 				case 'entity':
-					return $this->getEntityView($configuration->getSourceReference(), $configuration);
+					$gridView = $this->getEntityView($configuration->getSourceReference(), $configuration);
 					break;
 				default:
 					throw new \Exception(sprintf('Source type %s unknown', $configuration->getSourceType()));
 			}
 			
+			// Actions
+			foreach($configuration->getActions() as $action) {
+				$gridView->getGrid()->addRowAction($action->getRowAction());
+			}
+			
+			return $gridView;
 		}
 		throw new \Exception(sprintf("Grid id %s doesn't exist", $gridId));
 	}
 	
-	protected function getEntityView($entity, $configuration) {
+	protected function getEntityView($entity, ConfigurationInterface $configuration) {
 		if ($this->entitiesManager->has($entity)) {
 			$class_name = $this->entitiesManager->getManager($entity)->getClassName();
-			$this->grid->setPrefixTitle($entity.'.');
 		} else {
 			$class_name = $entity;
 			$entityClass = new \ReflectionClass($entity);
-			$this->grid->setPrefixTitle($entityClass->getName() . ' ');
 		}
+		$this->grid->setPrefixTitle($configuration->getGridId().'.');
 		$gridView = new GridEntityView($this->grid, $class_name);
 		$gridView->setSource(new Entity($class_name));
 		

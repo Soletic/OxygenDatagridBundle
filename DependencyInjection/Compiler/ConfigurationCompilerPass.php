@@ -20,9 +20,14 @@ class ConfigurationCompilerPass implements CompilerPassInterface
 		$pool = $container->getDefinition('oxygen_datagrid.configuration.pool');
 		
 		$configurations = array();
-		$taggedServices = $container->findTaggedServiceIds('oxygen.grid.configuration');
+		$gridServicesToGridId = array();
 		
-		foreach ($taggedServices as $id => $tagAttributes) {
+		// Search tag
+		$grids = $container->findTaggedServiceIds('oxygen.grid');
+		$gridActions = $container->findTaggedServiceIds('oxygen.grid_action');
+		
+		// Grids
+		foreach ($grids as $id => $tagAttributes) {
 			if (count($tagAttributes) > 1)
 				throw new \Exception("Too much tag oxygen.grid.configuration on service " . $id);
 			
@@ -33,7 +38,23 @@ class ConfigurationCompilerPass implements CompilerPassInterface
 				->addArgument($attributes['source_reference']);
 			
 			$configurations[$attributes['grid_id']] = $id;
+			$gridServicesToGridId[$id] = $attributes['grid_id'];
 		}
+		
+		//Actions
+		$attributesRequired = array('route', 'type');
+		foreach ($gridActions as $id => $tagAttributes) {
+			foreach($tagAttributes as $attributes) {
+				if (!empty($gridServicesToGridId[$id])) {
+					// Attribute required
+					foreach($attributesRequired as $attribute) {
+						if (empty($attributes[$attribute]))
+							throw new \Exception(sprintf("Attribute %s required for tag oxygen.grid_action in service %s", $attribute, $id));
+					}
+					$definition = $container->getDefinition($id)->addMethodCall('addActionType', array($attributes['route'], $attributes['type']));
+				}
+			}
+		}	
 		$pool->addMethodCall('setConfigurations', array($configurations));
 	}
 }
