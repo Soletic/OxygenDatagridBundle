@@ -1,6 +1,8 @@
 <?php
 namespace Oxygen\DatagridBundle\DependencyInjection\Compiler;
 
+use Symfony\Component\DependencyInjection\Definition;
+
 use Symfony\Component\DependencyInjection\Reference;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -25,6 +27,7 @@ class ConfigurationCompilerPass implements CompilerPassInterface
 		// Search tag
 		$grids = $container->findTaggedServiceIds('oxygen.grid');
 		$gridActions = $container->findTaggedServiceIds('oxygen.grid_action');
+		$gridColumns = $container->findTaggedServiceIds('oxygen.grid_column');
 		
 		// Grids
 		foreach ($grids as $id => $tagAttributes) {
@@ -33,14 +36,41 @@ class ConfigurationCompilerPass implements CompilerPassInterface
 			
 			$attributes = $tagAttributes[0];
 			$definition = $container->getDefinition($id)
-				->addArgument($attributes['grid_id'])
-				->addArgument($attributes['source_type'])
-				->addArgument($attributes['source_reference']);
+				->addArgument($attributes['gridId'])
+				->addArgument($attributes['sourceType'])
+				->addArgument($attributes['sourceReference']);
 			
-			$configurations[$attributes['grid_id']] = $id;
-			$gridServicesToGridId[$id] = $attributes['grid_id'];
+			// Class definition of the service
+			$class = $definition->getClass();
+			if ($container->hasParameter(str_replace('%', '', $definition->getClass())))
+				$class = $container->getParameter(str_replace('%', '', $definition->getClass()));
+			$class = new \ReflectionClass($class);
+			
+			if (!empty($attributes['groupBy']))
+				$definition->addMethodCall('setGroupBy', array($attributes['groupBy']));
+			
+			// Inject data or service
+			if ($container->has('oxygen_framework.entities') && $class->isSubclassOf('Oxygen\DatagridBundle\Grid\Configuration\Entity\EntityConfiguration')) {
+				$definition->addMethodCall('setEntitiesServer', array(new Reference('oxygen_framework.entities')));
+			}
+			
+			$configurations[$attributes['gridId']] = $id;
+			$gridServicesToGridId[$id] = $attributes['gridId'];
 		}
 		
+		// Columns
+		foreach ($gridColumns as $id => $columns) {
+			foreach($columns as $attributes) {
+				if (!empty($gridServicesToGridId[$id])) {
+					$type = (!empty($attributes['type']))?$attributes['type']:null;
+					if (empty($attributes['id']) && empty($attributes['title'])) {
+						throw new \Exception(sprintf("Attribute id or title required for tag oxygen.grid_column in service %s", $attribute, $id));
+					}
+					$definition = $container->getDefinition($id)->addMethodCall('addColumn', array($attributes, $type));
+				}
+			}
+		}
+			
 		//Actions
 		$attributesRequired = array('route', 'type');
 		foreach ($gridActions as $id => $tagAttributes) {

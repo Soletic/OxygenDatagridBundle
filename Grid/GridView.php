@@ -46,7 +46,7 @@ abstract class GridView {
 	    return $this->source;
 	}
 	
-	public function getGridResponse($template) {
-		return $this->grid->getGridResponse($template);
+	public function getGridResponse($template, $params = array()) {
+		return $this->grid->getGridResponse($template, $params);
 	}
 } 
