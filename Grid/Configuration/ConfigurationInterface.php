@@ -19,6 +19,13 @@ interface ConfigurationInterface {
 	 * @return bool
 	 */
 	public function isSortable();
+	/**
+	 * Return true if no data message displayed
+	 * 
+	 * @return bool
+	 */
+	public function isNoDataMessage();
+	
 	public function addColumn($params, $type = null);
 	/**
 	 * Retourne les colonnes ajoutés au data grid

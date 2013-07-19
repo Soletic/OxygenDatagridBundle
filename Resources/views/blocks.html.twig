@@ -6,14 +6,18 @@
     <ul class="grid-row-actions">
     {% for action in actions %}
     	{% set icon = null %}
-    	{% for name, value in action.attributes if name=='row-action' and (value == 'edit' or value == 'delete') %}
+    	{% for name, value in action.attributes if name=='row-action' and (value == 'edit' or value == 'delete' or value == 'copy') %}
     	{% set icon = (value=='edit')?'<i class="icon-edit"></i>':'<i class="icon-remove"></i>' %}
+    	{% set icon = (value=='copy')?'<i class="icon-share"></i>':icon %}
     	{% endfor %}
         <li><a {{ (icon is not null)?'data-toggle="tooltip"':'' }} href="{{ url(action.route, column.routeParameters(row, action), false) }}" target="{{ action.target }}"{% if action.confirm %} onclick="return confirm('{{ action.confirmMessage }}')"{% endif %}{% for name, value in action.attributes %} {{ name }}="{{ value }}" {% endfor %} title="{{ action.title|trans }}">{% autoescape false %}{{ (icon is not null)?icon:action.title|trans }}{% endautoescape %}</a></li>
     {% endfor %}
     </ul>
 {% endspaceless %}
 {% endblock %}
+
+{# ------------------------------------------------------ grid no data------------------------------------------------------ #}
+{% block grid_no_data %}{% if not (grid.noDataMessage is sameas(false)) %}<p class="no_data">{{ grid.noDataMessage|default('No data')|trans|raw }}</p>{% endif %}{% endblock grid_no_data %}
 
 {# ------------------------------------------------------ grid ------------------------------------------------------ #}
 {% block grid %}

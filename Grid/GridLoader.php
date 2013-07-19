@@ -67,6 +67,12 @@ class GridLoader
 			foreach ($configuration->getActions() as $action) {
 				$gridView->getGrid()->addRowAction($action->getRowAction());
 			}
+			
+			$gridView->getGrid()->setLimits(array(10000 => '10000'));
+			
+			if (!$configuration->isNoDataMessage()) {
+				$gridView->getGrid()->setNoDataMessage(false);
+			}
 
 			return $gridView;
 		}

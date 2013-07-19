@@ -1,6 +1,8 @@
 <?php
 namespace Oxygen\DatagridBundle\Grid\Configuration;
 
+use Oxygen\DatagridBundle\Grid\Action\Copy;
+
 use Oxygen\DatagridBundle\Grid\Action\Edit;
 use Oxygen\DatagridBundle\Grid\Action\Delete;
 
@@ -106,6 +108,9 @@ abstract class Configuration implements ConfigurationInterface {
 			case 'delete':
 				$action = new Delete('Supprimer', $route);
 				break;
+			case 'copy':
+				$action = new Copy('Copier', $route);
+				break;
 			default:
 				throw new \Exception(sprintf("Action type %s unknown", $type));
 		}
@@ -148,6 +153,13 @@ abstract class Configuration implements ConfigurationInterface {
 	 */
 	public function isSortable() {
 		return ($this->getScalarConfiguration('sortable') === true);
+	}
+	/**
+	 * (non-PHPdoc)
+	 * @see Oxygen\DatagridBundle\Grid\Configuration.ConfigurationInterface::isNoDataMessage()
+	 */
+	public function isNoDataMessage() {
+		return (!is_null($this->getConfiguration('no_data')));
 	}
 	
 	public function addColumn($params, $type = null) {
