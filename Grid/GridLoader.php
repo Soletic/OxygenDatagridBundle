@@ -50,10 +50,11 @@ class GridLoader
 		$this->configurationsPool = $configurationsPool;
 	}
 
-	public function getView($gridId)
+	public function getView($gridId, array $params = array())
 	{
 		if ($this->configurationsPool->has($gridId)) {
 			$configuration = $this->configurationsPool->get($gridId);
+			$configuration->setParameters($params);
 
 			switch ($configuration->getSourceType()) {
 				case 'entity':
@@ -64,8 +65,10 @@ class GridLoader
 			}
 
 			// Actions
-			foreach ($configuration->getActions() as $action) {
-				$gridView->getGrid()->addRowAction($action->getRowAction());
+			if (count($configuration->getActions()) > 0) {
+				foreach ($configuration->getActions() as $action) {
+					$gridView->getGrid()->addRowAction($action->getRowAction());
+				}
 			}
 			
 			$gridView->getGrid()->setLimits(array(10000 => '10000'));

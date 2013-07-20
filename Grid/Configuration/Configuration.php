@@ -17,6 +17,12 @@ use Oxygen\DatagridBundle\Grid\Configuration\ConfigurationInterface;
 abstract class Configuration implements ConfigurationInterface {
 	
 	protected $configuration = array();
+	/**
+	 * Additional parameters
+	 * 
+	 * @var array
+	 */
+	protected $params = array();
 	
 	/**
 	 * Convert type column to class
@@ -26,7 +32,7 @@ abstract class Configuration implements ConfigurationInterface {
 	private $columnsType = array(
 			'array' => 'ArrayColumn', 'blank' => 'BlankColumn', 'boolean' => 'BooleanColumn',
 			'date' => 'DateColumn', 'datetime' => 'DateTimeColumn', 'number' => 'NumberColumn',
-			'text' => 'TextColumn', 'time' => 'TimeColumn', 'untype' => 'UntypeColumn'
+			'text' => 'TextColumn', 'time' => 'TimeColumn', 'untype' => 'UntypedColumn'
 		);
 	
 	public function __construct($gridId, $sourceType, $sourceReference) {
@@ -184,6 +190,34 @@ abstract class Configuration implements ConfigurationInterface {
 	 */
 	public function getColumnsAdded() {
 		return (count($this->getConfiguration('columns')) > 0)?$this->getConfiguration('columns'):array();
+	}
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see Oxygen\DatagridBundle\Grid\Configuration.ConfigurationInterface::setParameters()
+	 */
+	public function setParameters(array $params = array())
+	{
+	    $this->params = $params;
+	    return $this;
+	}
+	/**
+	 * (non-PHPdoc)
+	 * @see Oxygen\DatagridBundle\Grid\Configuration.ConfigurationInterface::getParameters()
+	 */
+	public function getParameters()
+	{
+	    return $this->params;
+	}
+	/**
+	 * (non-PHPdoc)
+	 * @see Oxygen\DatagridBundle\Grid\Configuration.ConfigurationInterface::getParameter()
+	 */
+	public function getParameter($name) {
+		if (!empty($this->params[$name])) {
+			return $this->params[$name];
+		}
+		return null;
 	}
 	
 	abstract protected function load();

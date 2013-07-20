@@ -52,4 +52,24 @@ interface ConfigurationInterface {
 	public function addConfiguration($path, $value);
 	
 	public function getScalarConfiguration($path);
+	
+	/**
+	* Set additional parameters
+	* 
+	* @param array array $params
+	* @return ConfigurationInterface
+	*/
+	public function setParameters(array $params);
+	 
+	/**
+	* @return array
+	*/
+	public function getParameters();
+	/**
+	 * Return a parameter by name or null if not exist
+	 * 
+	 * @param string $name
+	 */
+	public function getParameter($name);
+
 }

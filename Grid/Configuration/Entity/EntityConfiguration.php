@@ -47,4 +47,12 @@ class EntityConfiguration extends Configuration {
 		}
 	}
 	
+	protected function validateRequired(array $required) {
+		foreach($required as $param) {
+			if (is_null($this->getParameter('eventId'))) {
+				throw new \Exception(sprintf('Parameter %s required for grid %s', $param, $this->getGridId()));
+			}
+		}
+	}
+	
 }
