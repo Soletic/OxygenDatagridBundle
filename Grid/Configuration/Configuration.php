@@ -106,7 +106,7 @@ abstract class Configuration implements ConfigurationInterface {
 	 * @param string $type edit or delete
 	 * @throws \Exception Action type unknown
 	 */
-	public function addActionType($route, $type) {
+	public function addActionType($route, $type, $routeParameters = array()) {
 		switch($type) {
 			case 'edit':
 				$action = new Edit('Modifier', $route);
@@ -120,6 +120,7 @@ abstract class Configuration implements ConfigurationInterface {
 			default:
 				throw new \Exception(sprintf("Action type %s unknown", $type));
 		}
+		$action->addRouteParameters($routeParameters);
 		$this->addConfiguration('actions', $action);
 	}
 	
@@ -218,6 +219,15 @@ abstract class Configuration implements ConfigurationInterface {
 			return $this->params[$name];
 		}
 		return null;
+	}
+	
+	public function getHideColumns() {
+		return $this->getScalarConfiguration('columns_hide');
+	}
+
+	public function setHideColumns($columnsId) {
+		$columnsId = explode(',', $columnsId);
+		$this->addConfiguration('columns_hide', $columnsId);
 	}
 	
 	abstract protected function load();

@@ -48,6 +48,8 @@ class ConfigurationCompilerPass implements CompilerPassInterface
 			
 			if (!empty($attributes['groupBy']))
 				$definition->addMethodCall('setGroupBy', array($attributes['groupBy']));
+			if (!empty($attributes['hide']))
+				$definition->addMethodCall('setHideColumns', array($attributes['hide']));
 			
 			// Inject data or service
 			if ($container->has('oxygen_framework.entities') && $class->isSubclassOf('Oxygen\DatagridBundle\Grid\Configuration\Entity\EntityConfiguration')) {
@@ -81,7 +83,12 @@ class ConfigurationCompilerPass implements CompilerPassInterface
 						if (empty($attributes[$attribute]))
 							throw new \Exception(sprintf("Attribute %s required for tag oxygen.grid_action in service %s", $attribute, $id));
 					}
-					$definition = $container->getDefinition($id)->addMethodCall('addActionType', array($attributes['route'], $attributes['type']));
+					$parameters = array();
+					if (!empty($attributes['parameters'])) {
+						$parameters = explode(',', $attributes['parameters']);
+					}
+					$definition = $container->getDefinition($id)->addMethodCall(
+							'addActionType', array($attributes['route'], $attributes['type'], $parameters));
 				}
 			}
 		}	

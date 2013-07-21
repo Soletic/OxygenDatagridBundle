@@ -71,5 +71,17 @@ interface ConfigurationInterface {
 	 * @param string $name
 	 */
 	public function getParameter($name);
-
+	/**
+	 * Return columns id hidden
+	 * 
+	 * @return array
+	 */
+	public function getHideColumns();
+	/**
+	 * Set columns to hide
+	 * 
+	 * @param string $columnsId Columns id separated by comma
+	 */
+	public function setHideColumns($columnsId);
+	
 }

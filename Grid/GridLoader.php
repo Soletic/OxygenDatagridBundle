@@ -67,8 +67,13 @@ class GridLoader
 			// Actions
 			if (count($configuration->getActions()) > 0) {
 				foreach ($configuration->getActions() as $action) {
-					$gridView->getGrid()->addRowAction($action->getRowAction());
+					$gridView->getGrid()->addRowAction($action->getRowAction($params));
 				}
+			}
+			
+			// Hide columns
+			if (count($configuration->getHideColumns()) > 0) {
+				$gridView->getGrid()->hideColumns($configuration->getHideColumns());
 			}
 			
 			$gridView->getGrid()->setLimits(array(10000 => '10000'));

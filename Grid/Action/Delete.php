@@ -13,6 +13,7 @@ class Delete extends Action {
 		parent::__construct($title, $route);
 		$this->addAttribute('row-action', 'delete');
 		$this->setConfirm(true);
+		$this->addRouteParameters(array('id'));
 	}
 	
 }

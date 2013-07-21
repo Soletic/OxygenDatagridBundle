@@ -23,9 +23,21 @@ abstract class Action {
 		$this->title = $title;
 		$this->route = $route;
 	}
-	
+	/**
+	 * Remplace list of parameters path
+	 * 
+	 * @param array $routeParameters
+	 */
 	public function setRouteParameters(array $routeParameters) {
 		$this->routeParameters = $routeParameters;	
+	}
+	/**
+	 * Add list of parameters path
+	 *
+	 * @param array $routeParameters
+	 */
+	public function addRouteParameters(array $routeParameters) {
+		$this->routeParameters = array_merge($this->routeParameters, $routeParameters);
 	}
 	
 	/**
@@ -100,12 +112,23 @@ abstract class Action {
 	public function getAttributes() {
 		return $this->attributes;
 	}
-	
-	public function getRowAction() {
+	/**
+	 * Return a new APY row action
+	 * 
+	 * @param array $params Params of the Datagrid
+	 * @return RowAction
+	 */
+	public function getRowAction(array $params) {
 		$action = new RowAction(
 				$this->title, $this->route, $this->isConfirm(), $this->getTarget(), $this->getAttributes(), 
 				(is_null($this->getRoles()) || count($this->getRoles()<=0))?null:$this->getRoles()
 			);
+		foreach($this->routeParameters as $key => $parameter) {
+			if (!empty($params[$parameter])) {
+				$this->routeParameters[$parameter] = $params[$parameter];
+				unset($this->routeParameters[$key]);
+			}
+		}
 		$action->setRouteParameters($this->routeParameters);
 		return $action;
 	}

@@ -12,6 +12,7 @@ class Edit extends Action {
 	public function __construct($title, $route) {
 		parent::__construct($title, $route);
 		$this->addAttribute('row-action', 'edit');
+		$this->addRouteParameters(array('id'));
 	}
 	
 }
