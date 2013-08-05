@@ -50,6 +50,23 @@ class ConfigurationCompilerPass implements CompilerPassInterface
 				$definition->addMethodCall('setGroupBy', array($attributes['groupBy']));
 			if (!empty($attributes['hide']))
 				$definition->addMethodCall('setHideColumns', array($attributes['hide']));
+
+			// Order
+			$ordersColumn = array();
+			foreach($attributes as $attributeName => $value) {
+				$matches = array();
+				if (preg_match('/^orderBy(.*)$/', $attributeName, $matches)) {
+					if (is_numeric($matches[0])) {
+						$key = substr_replace("00", $matches[0], -strlen($matches[0]));
+					} else {
+						$key = substr_replace("00", count($ordersColumn), -strlen(count($ordersColumn)));
+					}
+					$ordersColumn[$key] = explode(',', $value);
+				}
+			}
+			if (count($ordersColumn) > 0) {
+				$definition->addMethodCall('orderBy', array_values($ordersColumn));
+			}
 			
 			// Inject data or service
 			if ($container->has('oxygen_framework.entities') && $class->isSubclassOf('Oxygen\DatagridBundle\Grid\Configuration\Entity\EntityConfiguration')) {

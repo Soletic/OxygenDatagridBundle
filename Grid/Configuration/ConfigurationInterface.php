@@ -83,5 +83,10 @@ interface ConfigurationInterface {
 	 * @param string $columnsId Columns id separated by comma
 	 */
 	public function setHideColumns($columnsId);
-	
+	/**
+	 * Set column to order by the grid
+	 * 
+	 * @param array $columns List of array with 2 values : columnId and order (ASC or DESC). The second value is optionnal
+	 */
+	public function orderBy(array $columns);
 }

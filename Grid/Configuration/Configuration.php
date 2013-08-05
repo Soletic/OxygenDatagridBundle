@@ -220,14 +220,37 @@ abstract class Configuration implements ConfigurationInterface {
 		}
 		return null;
 	}
-	
+	/**
+	 * (non-PHPdoc)
+	 * @see Oxygen\DatagridBundle\Grid\Configuration.ConfigurationInterface::getHideColumns()
+	 */
 	public function getHideColumns() {
 		return $this->getScalarConfiguration('columns_hide');
 	}
-
+	/**
+	 * (non-PHPdoc)
+	 * @see Oxygen\DatagridBundle\Grid\Configuration.ConfigurationInterface::setHideColumns()
+	 */
 	public function setHideColumns($columnsId) {
 		$columnsId = explode(',', $columnsId);
 		$this->addConfiguration('columns_hide', $columnsId);
+	}
+	/**
+	 * (non-PHPdoc)
+	 * @see Oxygen\DatagridBundle\Grid\Configuration.ConfigurationInterface::orderBy()
+	 */
+	public function orderBy(array $columns) {
+		foreach($columns as $order) {
+			if (count($order) == 2 && !in_array($order[1], array('ASC', 'DESC'))) {
+				throw new \Exception(sprintf('%s not allowed to order the grid %s with the column %s. Order attribute of oxygen.grid must look like [columnId],[ASC|DESC]', $order[1], $this->getGridId(), $order[0]));
+			} elseif (!in_array(count($order), array(1,2))) {
+				throw new \Exception(sprintf('Order attribute %s invalid for the grid %s. Order attribute of oxygen.grid must look like [columnId],[ASC|DESC]', join(',', $order), $this->getGridId()));
+			}
+		}
+		$this->addConfiguration('order', $columns);
+	}
+	public function getOrderBy() {
+		return $this->getConfiguration('order');
 	}
 	
 	abstract protected function load();

@@ -71,6 +71,13 @@ class GridLoader
 				}
 			}
 			
+			// Order
+			if (count($configuration->getOrderBy()) > 0) {
+				$order = $configuration->getOrderBy();
+				$order = current($order);
+				$gridView->getGrid()->setDefaultOrder($order[0], $order[1]);
+			}
+			
 			// Hide columns
 			if (count($configuration->getHideColumns()) > 0) {
 				$gridView->getGrid()->hideColumns($configuration->getHideColumns());
