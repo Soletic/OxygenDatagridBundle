@@ -6,7 +6,7 @@ Installer APYDataGridBundle
 
 OxygenDataGridBundle utilise le très bon bundle APYDataGridBundle.
 
-:doc:`Installation de APYDataGridBundle <https://github.com/Abhoryo/APYDataGridBundle/blob/master/Resources/doc/installation.md>`
+`Installation de APYDataGridBundle <https://github.com/Abhoryo/APYDataGridBundle/blob/master/Resources/doc/installation.md>`_
 
 Télécharger OxygenDatagridBundle
 --------------------------------

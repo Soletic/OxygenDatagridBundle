@@ -13,7 +13,7 @@ et précisant :
 * La référence de la source : 
 
    * soit une classe entité : MyBundle\Entity\Event
-   * soit l'identifiant d'une entité déclarée :doc:`Lire la documentation de OxygenFrameworkBundle <https://github.com/Soletic/OxygenFrameworkBundle/blob/master/Resources/doc/entity_override_manager.rst>` 
+   * soit l'identifiant d'une entité déclarée :doc:`Lire la documentation de OxygenFrameworkBundle <../framework/book/entity>` 
    
 .. code-block:: xml
 
