@@ -45,7 +45,7 @@ Dans votre controller, deux lignes suffisent :
 Et dans la vue utilisée par le controller, l'affichage se fait grâce à la fonction twig grid :
 
 
-.. code-block:: twig
+.. code-block:: jinja
 
    {% extends oxygen_layout() %}
 
